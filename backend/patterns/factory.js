@@ -1,8 +1,12 @@
 // FACTORY PATTERN
 // A factory is like a machine that creates different types of users
 // You tell it what role you want, it gives you the right user object
-// Think of it like a job application — Admin gets all access,
-// Developer gets limited access, Tester gets read only
+//
+// ROLES AND PERMISSIONS:
+// Admin   — full access, can do everything
+// Manager — can create, assign and delete tasks, can view reports
+// Developer — CANNOT create tasks, can only update status of assigned tasks
+// Tester  — CANNOT create tasks, can only update status of assigned tasks
 
 function createUser(username, password, role) {
 
@@ -13,10 +17,10 @@ function createUser(username, password, role) {
     role,
   };
 
-  // Depending on the role, we add different permissions
   if (role === 'admin') {
     return {
       ...baseUser,
+      canCreateTasks: true,
       canDeleteTasks: true,
       canAssignTasks: true,
       canViewReports: true,
@@ -26,15 +30,19 @@ function createUser(username, password, role) {
   if (role === 'manager') {
     return {
       ...baseUser,
-      canDeleteTasks: false,
+      canCreateTasks: true,
+      canDeleteTasks: true,
       canAssignTasks: true,
       canViewReports: true,
     };
   }
 
   if (role === 'developer') {
+    // Developer can ONLY update status of tasks assigned to them
+    // They cannot create, delete or assign tasks
     return {
       ...baseUser,
+      canCreateTasks: false,
       canDeleteTasks: false,
       canAssignTasks: false,
       canViewReports: false,
@@ -42,8 +50,11 @@ function createUser(username, password, role) {
   }
 
   if (role === 'tester') {
+    // Tester can ONLY update status of tasks assigned to them
+    // They cannot create, delete or assign tasks
     return {
       ...baseUser,
+      canCreateTasks: false,
       canDeleteTasks: false,
       canAssignTasks: false,
       canViewReports: false,
@@ -54,6 +65,7 @@ function createUser(username, password, role) {
   return {
     ...baseUser,
     role: 'developer',
+    canCreateTasks: false,
     canDeleteTasks: false,
     canAssignTasks: false,
     canViewReports: false,

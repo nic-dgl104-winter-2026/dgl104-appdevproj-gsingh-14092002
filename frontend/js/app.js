@@ -100,8 +100,17 @@ function logout() {
 function showApp() {
   document.getElementById('auth-page').style.display = 'none';
   document.getElementById('app-page').style.display = 'block';
-  document.getElementById('nav-username').textContent =
-    'Hello, ' + (localStorage.getItem('username') || '');
+  const username = localStorage.getItem('username') || '';
+  const role = localStorage.getItem('role') || '';
+  document.getElementById('nav-username').textContent = `Hello, ${username} (${role})`;
+
+  // Hide Add Task button for developer and tester
+  if (role === 'developer' || role === 'tester') {
+    document.querySelector('.add-btn').style.display = 'none';
+  } else {
+    document.querySelector('.add-btn').style.display = 'inline-block';
+  }
+
   loadTasks();
 }
 
@@ -170,6 +179,9 @@ function renderTasks(tasks) {
 }
 
 function createTaskCard(task) {
+  const role = localStorage.getItem('role') || '';
+  const canDelete = role === 'admin' || role === 'manager';
+
   const card = document.createElement('div');
   card.className = `task-card ${task.priority}`;
   card.innerHTML = `
@@ -180,7 +192,7 @@ function createTaskCard(task) {
     <span class="badge ${task.priority}">${task.priority}</span>
     <div class="task-actions">
       <button class="edit-btn" onclick="openEditModal(${task.id})">Edit</button>
-      <button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>
+      ${canDelete ? `<button class="delete-btn" onclick="deleteTask(${task.id})">Delete</button>` : ''}
     </div>
   `;
   return card;
@@ -195,12 +207,10 @@ function updateStats(tasks) {
   document.getElementById('count-inprogress').textContent = inprogress;
   document.getElementById('count-completed').textContent = completed;
 
-  // Destroy old chart if exists
   if (chartInstance) {
     chartInstance.destroy();
   }
 
-  // Only draw chart if there are tasks
   if (todo + inprogress + completed === 0) return;
 
   const ctx = document.getElementById('taskChart').getContext('2d');
