@@ -1,4 +1,11 @@
-const API = 'http://localhost:3000/api';
+// Main frontend application
+// Handles authentication, task management,
+// Kanban board rendering, and dashboard statistics.
+
+const API = window.location.hostname === 'localhost'
+  ? 'http://localhost:3000/api'
+  : 'https://task-management-system-mhpx.onrender.com/api';
+
 let token = localStorage.getItem('token');
 let editingTaskId = null;
 let chartInstance = null;
@@ -104,7 +111,7 @@ function showApp() {
   const role = localStorage.getItem('role') || '';
   document.getElementById('nav-username').textContent = `Hello, ${username} (${role})`;
 
-  // Hide Add Task button for developer and tester
+  // Restrict Add Task button for developer and tester roles
   if (role === 'developer' || role === 'tester') {
     document.querySelector('.add-btn').style.display = 'none';
   } else {
