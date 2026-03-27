@@ -1,10 +1,10 @@
-// We import the better-sqlite3 library
+// Database Module
+// Implements the Singleton Pattern to ensure only one
+// database connection instance exists throughout the application.
+
 const Database = require('better-sqlite3');
 const path = require('path');
 
-// SINGLETON PATTERN
-// This means we only ever create ONE database connection
-// Think of it like one door to the database — everyone uses the same door
 let instance = null;
 
 function getDatabase() {
@@ -16,9 +16,9 @@ function getDatabase() {
   return instance;
 }
 
-// This creates our tables (like Excel sheets) inside the database
+// Creates the required tables if they do not already exist
 function createTables(db) {
-  // Users table — stores everyone who registers
+  // Users table — stores registered user accounts
   db.exec(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +28,7 @@ function createTables(db) {
     )
   `);
 
-  // Tasks table — stores all tasks
+  // Tasks table — stores all tasks in the system
   db.exec(`
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY AUTOINCREMENT,

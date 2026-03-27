@@ -1,16 +1,9 @@
-// FACTORY PATTERN
-// A factory is like a machine that creates different types of users
-// You tell it what role you want, it gives you the right user object
-//
-// ROLES AND PERMISSIONS:
-// Admin   — full access, can do everything
-// Manager — can create, assign and delete tasks, can view reports
-// Developer — CANNOT create tasks, can only update status of assigned tasks
-// Tester  — CANNOT create tasks, can only update status of assigned tasks
+// Factory Pattern
+// Dynamically creates user objects with role-based permissions.
+// Each role has a defined set of access rights within the system.
 
 function createUser(username, password, role) {
 
-  // Base user — every user has these basics
   const baseUser = {
     username,
     password,
@@ -38,8 +31,7 @@ function createUser(username, password, role) {
   }
 
   if (role === 'developer') {
-    // Developer can ONLY update status of tasks assigned to them
-    // They cannot create, delete or assign tasks
+    // Developers can only update the status of tasks assigned to them
     return {
       ...baseUser,
       canCreateTasks: false,
@@ -50,8 +42,7 @@ function createUser(username, password, role) {
   }
 
   if (role === 'tester') {
-    // Tester can ONLY update status of tasks assigned to them
-    // They cannot create, delete or assign tasks
+    // Testers can only update the status of tasks assigned to them
     return {
       ...baseUser,
       canCreateTasks: false,
@@ -61,7 +52,7 @@ function createUser(username, password, role) {
     };
   }
 
-  // Default — if no role given, make them a developer
+  // Default role is developer
   return {
     ...baseUser,
     role: 'developer',
