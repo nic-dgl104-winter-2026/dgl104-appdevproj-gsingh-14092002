@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: task-management-system
+    env: node
+    buildCommand: npm install
+    startCommand: node backend/server.js
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: JWT_SECRET
+        value: supersecretkey123
